@@ -1,6 +1,8 @@
 "use client"
 
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
+import * as React from "react"
+import { mergeProps } from "@base-ui/react/merge-props"
+import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -10,7 +12,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
@@ -42,19 +44,35 @@ const buttonVariants = cva(
   }
 )
 
+type ButtonProps = useRender.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    type?: React.ComponentProps<"button">["type"]
+  }
+
 function Button({
   className,
   variant = "default",
   size = "default",
+  type = "button",
+  render,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
-  return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+}: ButtonProps) {
+  const defaultButtonProps = {
+    type: type ?? "button",
+    "data-slot": "button",
+    className: cn(buttonVariants({ variant, size, className })),
+  } as React.ComponentPropsWithoutRef<"button">
+
+  return useRender({
+    defaultTagName: "button",
+    props: mergeProps<"button">(defaultButtonProps, props),
+    render,
+    state: {
+      slot: "button",
+      variant,
+      size,
+    },
+  })
 }
 
 export { Button, buttonVariants }

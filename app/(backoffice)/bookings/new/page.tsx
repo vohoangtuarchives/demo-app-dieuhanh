@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GlassPanel, GlassTableContainer } from "@/components/glass/glass";
+import { PlPanel, PlTableShell } from "@/components/preline/layout-primitives";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Button } from "@/components/ui/button";
@@ -21,11 +21,11 @@ export default function BookingNewPage() {
 
   return (
     <div className="grid gap-4">
-      <GlassPanel>
+      <PlPanel>
         <h2 className="text-lg font-semibold">Form tạo phiếu dịch vụ</h2>
         <p className="text-sm text-muted-foreground">Điền theo 4 bước: Thông tin dịch vụ, thanh toán, tài liệu, xác nhận.</p>
-      </GlassPanel>
-      <GlassTableContainer>
+      </PlPanel>
+      <PlTableShell>
         <div className="space-y-4 p-3">
           <section className="grid gap-3 rounded-md border p-3 md:grid-cols-2">
             <h3 className="md:col-span-2 text-sm font-semibold">1) Thông tin dịch vụ</h3>
@@ -76,7 +76,7 @@ export default function BookingNewPage() {
           <p className="text-xs text-muted-foreground">Mẹo: nếu cần xác nhận NCC ngay, hãy nhập mã file trước khi tạo phiếu.</p>
           <Button disabled={invalidDeposit || missingDueDate}>Tạo phiếu DV</Button>
         </div>
-      </GlassTableContainer>
+      </PlTableShell>
     </div>
   );
 }

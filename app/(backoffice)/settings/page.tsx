@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { GlassPanel } from "@/components/glass/glass";
+import { PlPanel, PlTableShell } from "@/components/preline/layout-primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { GlassTableContainer } from "@/components/glass/glass";
 
 export default function SettingsPage() {
   const [uatChecks, setUatChecks] = useState({
@@ -29,13 +28,13 @@ export default function SettingsPage() {
 
   return (
     <div className="grid gap-4">
-      <GlassPanel>
+      <PlPanel>
         <h2 className="text-lg font-semibold">Cài đặt hệ thống</h2>
         <p className="mt-1 text-sm text-muted-foreground">Quản trị danh mục chi nhánh, vai trò, nhà cung cấp và ngưỡng duyệt quyết toán.</p>
-      </GlassPanel>
+      </PlPanel>
 
       <section className="grid gap-4 md:grid-cols-2">
-        <GlassPanel>
+        <PlPanel>
           <h3 className="text-sm font-semibold">Cấu hình phân quyền / ngưỡng duyệt</h3>
           <div className="mt-3 grid gap-2">
             <NativeSelect className="w-full">
@@ -50,9 +49,9 @@ export default function SettingsPage() {
             <Badge variant="info">Role: Ready</Badge>
             <Badge variant="warning">Threshold: Pending review</Badge>
           </div>
-        </GlassPanel>
+        </PlPanel>
 
-        <GlassPanel>
+        <PlPanel>
           <h3 className="text-sm font-semibold">Thêm nhà cung cấp</h3>
           <div className="mt-3 grid gap-2">
             <Input className="bg-card/80 backdrop-blur-sm" placeholder="Tên NCC" />
@@ -65,10 +64,10 @@ export default function SettingsPage() {
             <Input className="bg-card/80 backdrop-blur-sm" placeholder="Liên hệ" />
             <Button size="sm">Thêm NCC</Button>
           </div>
-        </GlassPanel>
+        </PlPanel>
       </section>
 
-      <GlassTableContainer>
+      <PlTableShell>
         <div className="p-3 pb-0">
           <h3 className="font-semibold">Danh sách cấu hình chi nhánh</h3>
         </div>
@@ -96,9 +95,9 @@ export default function SettingsPage() {
             </TableRow>
           </TableBody>
         </Table>
-      </GlassTableContainer>
+      </PlTableShell>
 
-      <GlassPanel>
+      <PlPanel>
         <h3 className="font-semibold">UAT checklist vận hành</h3>
         <div className="mt-3 grid gap-2 md:grid-cols-2">
           <Button variant={uatChecks.tourFlow ? "default" : "secondary"} onClick={() => toggleCheck("tourFlow")}>
@@ -139,7 +138,7 @@ export default function SettingsPage() {
             placeholder="Bằng chứng Permission check"
           />
         </div>
-      </GlassPanel>
+      </PlPanel>
     </div>
   );
 }

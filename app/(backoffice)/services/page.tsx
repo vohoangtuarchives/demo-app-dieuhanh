@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { GlassTableContainer, GlassStat } from "@/components/glass/glass";
+import Link from "next/link";
+import { PlStat, PlTableShell } from "@/components/preline/layout-primitives";
 import { EmptyBlock } from "@/components/backoffice/state-block";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UnifiedFilterBar } from "@/components/backoffice/unified-filter-bar";
 import { useQueryFilters } from "@/lib/hooks/use-query-filters";
 import { derivePaymentLifecycle, paymentLifecycleLabel, paymentLifecycleVariant, type PaymentLifecycle } from "@/lib/service-lifecycle";
+import { BriefcaseBusiness, CalendarDays, Eye, MapPin, RefreshCw, Upload, Users } from "lucide-react";
 
 type ServiceRow = {
   code: string;
@@ -162,6 +163,12 @@ export default function ServicesPage() {
 
   return (
     <>
+      <section className="grid gap-3 md:grid-cols-3">
+        <PlStat title="Chưa thanh toán" value={summary.unpaid} />
+        <PlStat title="Đã cọc" value={summary.deposited} />
+        <PlStat title="Đã thanh toán đủ" value={summary.full} />
+      </section>
+
       <UnifiedFilterBar title="List Dịch vụ (Thanh toán DV)" hasActiveFilters={hasActiveFilters} onReset={resetFilters}>
         <NativeSelect className="w-full" value={filters.serviceType} onChange={(e) => updateFilter("serviceType", e.target.value)}>
           <option>Tất cả</option>
@@ -180,7 +187,12 @@ export default function ServicesPage() {
           <option>An Bình Transport</option>
           <option>SkyVN</option>
         </NativeSelect>
-        <Input className="bg-card/80 backdrop-blur-sm" placeholder="Tìm mã tour/mã phiếu" value={filters.search} onChange={(e) => updateFilter("search", e.target.value)} />
+        <Input
+          className="bg-card/80 backdrop-blur-sm"
+          placeholder="Tìm mã tour/mã phiếu"
+          value={filters.search}
+          onChange={(e) => updateFilter("search", e.target.value)}
+        />
         <NativeSelect className="w-full" value={filters.sort} onChange={(e) => updateFilter("sort", e.target.value)}>
           <option value="dueDate_desc">Hạn TT giảm dần</option>
           <option value="dueDate_asc">Hạn TT tăng dần</option>
@@ -189,77 +201,162 @@ export default function ServicesPage() {
         </NativeSelect>
       </UnifiedFilterBar>
 
-      <section className="grid gap-3 md:grid-cols-3">
-        <GlassStat title="Chưa thanh toán" value={summary.unpaid} />
-        <GlassStat title="Đã cọc" value={summary.deposited} />
-        <GlassStat title="Đã thanh toán đủ" value={summary.full} />
-      </section>
-
-      <GlassTableContainer>
+      <section className="space-y-4">
         {filteredData.length === 0 ? (
           <EmptyBlock message="Chưa có dịch vụ theo bộ lọc hiện tại." />
         ) : (
-        <Table className="min-w-full">
-          <TableHeader>
-            <TableRow className="table-head-sticky">
-              <TableHead>Mã phiếu DV</TableHead>
-              <TableHead>Mã tour</TableHead>
-              <TableHead>Tên tour</TableHead>
-              <TableHead>Loại DV</TableHead>
-              <TableHead>NCC</TableHead>
-              <TableHead>Ngày sử dụng</TableHead>
-              <TableHead>SL/Đơn vị</TableHead>
-              <TableHead>Đơn giá</TableHead>
-              <TableHead>Tổng tiền</TableHead>
-              <TableHead>Tiền cọc</TableHead>
-              <TableHead>Còn lại</TableHead>
-              <TableHead>Đã thanh toán</TableHead>
-              <TableHead>Trạng thái</TableHead>
-              <TableHead>Hạn TT</TableHead>
-              <TableHead>Quá hạn</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+          <div className="space-y-4">
             {pagedData.map((row) => (
-              <TableRow key={row.code}>
-                <TableCell>{row.code}</TableCell>
-                <TableCell>{row.tourCode}</TableCell>
-                <TableCell>{row.tourName}</TableCell>
-                <TableCell>{row.type}</TableCell>
-                <TableCell>{row.supplier}</TableCell>
-                <TableCell>{row.useDate}</TableCell>
-                <TableCell>{row.quantity}</TableCell>
-                <TableCell>{row.unitPrice.toLocaleString("vi-VN")}</TableCell>
-                <TableCell>{row.total.toLocaleString("vi-VN")}</TableCell>
-                <TableCell>{row.deposit.toLocaleString("vi-VN")}</TableCell>
-                <TableCell>{(row.total - row.paid).toLocaleString("vi-VN")}</TableCell>
-                <TableCell>{row.paid.toLocaleString("vi-VN")}</TableCell>
-                <TableCell>
-                  <Badge variant={paymentLifecycleVariant(row.status as PaymentLifecycle)}>{paymentLifecycleLabel(row.status as PaymentLifecycle)}</Badge>
-                </TableCell>
-                <TableCell>{row.dueDate}</TableCell>
-                <TableCell>{row.overdue ? <Badge variant="danger">Quá hạn</Badge> : <Badge variant="secondary">Không</Badge>}</TableCell>
-                <TableCell className="space-x-2">
-                  <Button variant="default" size="sm" onClick={() => setSelectedCode(row.code)}>Cập nhật TT</Button>
-                  <Button variant="secondary" size="sm">Đính chứng từ</Button>
-                </TableCell>
-              </TableRow>
+              <div
+                key={row.code}
+                className="rounded-xl border border-border bg-background/90 shadow-sm"
+              >
+                <div className="p-4 md:p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary" className="rounded-md px-2.5 py-1">
+                          {row.code}
+                        </Badge>
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="size-3.5" aria-hidden />
+                          {row.tourCode}
+                        </span>
+                        <span className="truncate text-sm font-semibold text-foreground">
+                          {row.tourName}
+                        </span>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-3">
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <BriefcaseBusiness className="size-3.5" aria-hidden />
+                          <span className="font-medium text-foreground">{row.type}</span>
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          <Users className="size-3.5" aria-hidden />
+                          <span className="font-medium text-foreground">{row.supplier}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <Badge
+                        variant={paymentLifecycleVariant(row.status as PaymentLifecycle)}
+                        className="rounded-md px-2.5 py-1"
+                      >
+                        {paymentLifecycleLabel(row.status as PaymentLifecycle)}
+                      </Badge>
+                      {row.overdue ? (
+                        <Badge variant="danger" className="rounded-md px-2.5 py-1">
+                          Quá hạn
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="rounded-md px-2.5 py-1 text-muted-foreground">
+                          Không
+                        </Badge>
+                      )}
+                      <div className="shrink-0 text-right">
+                        <p className="text-lg font-semibold text-foreground">
+                          {row.total.toLocaleString("vi-VN")}
+                        </p>
+                        <p className="text-xs text-muted-foreground">Tổng giá trị</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid gap-4 md:grid-cols-4">
+                    <div>
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <CalendarDays className="size-3.5" aria-hidden />
+                        Ngày sử dụng
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {row.useDate}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">SL/Đơn vị</p>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {row.quantity}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Đơn giá</p>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {row.unitPrice.toLocaleString("vi-VN")}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Hạn TT</p>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {row.dueDate}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                    <Link
+                      href={`/tours/${row.tourCode}`}
+                      className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-background px-3 text-sm font-medium text-foreground shadow-sm hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <Eye className="size-4" aria-hidden />
+                      Xem tour
+                    </Link>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="h-9 gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+                      onClick={() => setSelectedCode(row.code)}
+                    >
+                      <RefreshCw className="size-4" aria-hidden />
+                      Cập nhật TT
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="h-9 gap-2"
+                      onClick={() => {
+                        // Demo: nút này mở form chi tiết thông qua Cập nhật TT (keeps behavior consistent).
+                        setSelectedCode(row.code);
+                      }}
+                    >
+                      <Upload className="size-4" aria-hidden />
+                      Đính chứng từ
+                    </Button>
+                  </div>
+                </div>
+              </div>
             ))}
-          </TableBody>
-        </Table>
-        )}
-        <div className="flex items-center justify-between border-t p-3 text-xs text-muted-foreground">
-          <span>Trang {page}/{totalPages} - {sortedData.length} bản ghi</span>
-          <div className="flex gap-2">
-            <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => updateFilter("page", String(page - 1))}>Trước</Button>
-            <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => updateFilter("page", String(page + 1))}>Sau</Button>
           </div>
-        </div>
-      </GlassTableContainer>
+        )}
+
+        {totalPages > 1 ? (
+          <div className="flex items-center justify-between border-t p-3 text-xs text-muted-foreground">
+            <span>Trang {page}/{totalPages} - {sortedData.length} bản ghi</span>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={page <= 1}
+                onClick={() => updateFilter("page", String(page - 1))}
+              >
+                Trước
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={page >= totalPages}
+                onClick={() => updateFilter("page", String(page + 1))}
+              >
+                Sau
+              </Button>
+            </div>
+          </div>
+        ) : null}
+      </section>
 
       {selectedRow ? (
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3">
             <h3 className="font-semibold">Chi tiết cập nhật thanh toán - {selectedRow.code}</h3>
             <p className="text-xs text-muted-foreground">
@@ -285,7 +382,7 @@ export default function ServicesPage() {
               </div>
             </div>
           </div>
-        </GlassTableContainer>
+        </PlTableShell>
       ) : null}
     </>
   );

@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GlassPanel, GlassStat, GlassTableContainer } from "@/components/glass/glass";
+import Link from "next/link";
+import { PlPanel, PlStat, PlTableShell } from "@/components/preline/layout-primitives";
 import { RoleGuard } from "@/components/providers/role-guard";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverHeader, PopoverTrigger } from "@/components/ui/popover";
 import { useAppShell } from "@/components/providers/app-shell-provider";
 import { maskMoneyByRole } from "@/lib/security";
 import { UnifiedFilterBar } from "@/components/backoffice/unified-filter-bar";
 import { useQueryFilters } from "@/lib/hooks/use-query-filters";
 import { type SettlementLifecycle } from "@/lib/service-lifecycle";
+import { Check, Eye, Wallet, X } from "lucide-react";
 
 type SettlementRow = {
   tourCode: string;
@@ -107,10 +110,18 @@ export default function SettlementsPage() {
 
   return (
     <RoleGuard allow={["OPS", "MANAGER"]}>
-      <GlassPanel>
+      <PlPanel>
         <h2 className="text-lg font-semibold">Quyết toán / Hoàn tiền HDV</h2>
         <p className="text-sm text-muted-foreground">Luồng tài chính cuối cùng trước khi chuyển tour sang trạng thái Thành công</p>
-      </GlassPanel>
+      </PlPanel>
+
+      <section className="grid gap-3 md:grid-cols-5">
+        <PlStat title="Chờ duyệt quyết toán" value={filteredRows.filter((row) => row.status === "SUBMITTED").length} />
+        <PlStat title="Đã duyệt" value={filteredRows.filter((row) => row.status === "APPROVED").length} />
+        <PlStat title="Bị từ chối" value={filteredRows.filter((row) => row.status === "REJECTED").length} />
+        <PlStat title="Đã hoàn/thu tiền" value={filteredRows.filter((row) => row.status === "PAID_OUT").length} />
+        <PlStat title="Giá trị xử lý" value={filteredRows.reduce((sum, row) => sum + row.refundAmount, 0).toLocaleString("vi-VN")} />
+      </section>
 
       <UnifiedFilterBar title="List Quyết toán / Hoàn tiền" hasActiveFilters={hasActiveFilters} onReset={resetFilters}>
         <select className="h-10 rounded-md border bg-card/80 px-3 text-sm" value={filters.status} onChange={(e) => updateFilter("status", e.target.value)}>
@@ -134,15 +145,7 @@ export default function SettlementsPage() {
         </select>
       </UnifiedFilterBar>
 
-      <section className="grid gap-3 md:grid-cols-5">
-        <GlassStat title="Chờ duyệt quyết toán" value={filteredRows.filter((row) => row.status === "SUBMITTED").length} />
-        <GlassStat title="Đã duyệt" value={filteredRows.filter((row) => row.status === "APPROVED").length} />
-        <GlassStat title="Bị từ chối" value={filteredRows.filter((row) => row.status === "REJECTED").length} />
-        <GlassStat title="Đã hoàn/thu tiền" value={filteredRows.filter((row) => row.status === "PAID_OUT").length} />
-        <GlassStat title="Giá trị xử lý" value={filteredRows.reduce((sum, row) => sum + row.refundAmount, 0).toLocaleString("vi-VN")} />
-      </section>
-
-      <GlassTableContainer>
+      <PlTableShell>
         <Table className="min-w-full">
           <TableHeader>
             <TableRow className="table-head-sticky">
@@ -175,15 +178,47 @@ export default function SettlementsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell>{row.refundAmount > approvalThreshold ? <Badge variant="warning">Vượt ngưỡng duyệt</Badge> : <Badge variant="success">Trong ngưỡng</Badge>}</TableCell>
-                <TableCell>{row.rejectReason ?? "-"}</TableCell>
+                <TableCell>
+                  {row.rejectReason ? (
+                    <Popover>
+                      <PopoverTrigger className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground shadow-sm hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <span className="inline-flex size-4 items-center justify-center rounded bg-destructive/10 text-destructive">
+                          !
+                        </span>
+                        Xem
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverHeader>Lý do từ chối</PopoverHeader>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{row.rejectReason}</p>
+                      </PopoverContent>
+                    </Popover>
+                  ) : (
+                    "-"
+                  )}
+                </TableCell>
                 <TableCell className="space-x-2">
-                  <Button variant="secondary" size="sm" onClick={() => approve(row.tourCode)}>
+                  <Link
+                    href={`/tours/${row.tourCode}`}
+                    className="inline-flex h-7 items-center justify-center gap-2 rounded-lg border border-border bg-background px-2.5 text-[0.8rem] font-medium text-foreground shadow-sm hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Eye className="size-3.5" aria-hidden />
+                    Xem tour
+                  </Link>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-emerald-600 text-white hover:bg-emerald-700"
+                    onClick={() => approve(row.tourCode)}
+                  >
+                    <Check className="size-3.5" aria-hidden />
                     Duyệt
                   </Button>
                   <Button variant="destructive" size="sm" onClick={() => reject(row.tourCode)}>
+                    <X className="size-3.5" aria-hidden />
                     Từ chối
                   </Button>
                   <Button size="sm" onClick={() => completeRefund(row.tourCode)}>
+                    <Wallet className="size-3.5" aria-hidden />
                     Hoàn/Thu tiền
                   </Button>
                 </TableCell>
@@ -198,7 +233,7 @@ export default function SettlementsPage() {
             <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => updateFilter("page", String(page + 1))}>Sau</Button>
           </div>
         </div>
-      </GlassTableContainer>
+      </PlTableShell>
     </RoleGuard>
   );
 }

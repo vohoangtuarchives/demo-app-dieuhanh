@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { GlassPanel, GlassStat, GlassTableContainer } from "@/components/glass/glass";
+import { PlPanel, PlStat, PlTableShell } from "@/components/preline/layout-primitives";
 import { useAppShell } from "@/components/providers/app-shell-provider";
 import { TOUR_STATUSES } from "@/lib/app-data";
 import { getNextStatuses, validateTransitionRequirements, type TourStatus, type WorkflowAction } from "@/lib/workflow";
@@ -51,18 +51,18 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
 
   return (
     <>
-      <GlassPanel>
+      <PlPanel>
         <h2 className="text-lg font-semibold">Tour Detail - {params.tourId}</h2>
         <p className="text-sm text-muted-foreground">Mã tour | Loại tour | Loại khách | Chi nhánh | Ngày KH-KT | Số khách | NVĐH</p>
         <div className="mt-3 grid gap-3 md:grid-cols-4">
-          <GlassStat title="Doanh thu dự kiến" value="510,000,000" />
-          <GlassStat title="Chi phí dự kiến" value="441,000,000" />
-          <GlassStat title="LN dự kiến" value="69,000,000" />
-          <GlassStat title="Số khách" value="19" />
+          <PlStat title="Doanh thu dự kiến" value="510,000,000" />
+          <PlStat title="Chi phí dự kiến" value="441,000,000" />
+          <PlStat title="LN dự kiến" value="69,000,000" />
+          <PlStat title="Số khách" value="19" />
         </div>
-      </GlassPanel>
+      </PlPanel>
 
-      <GlassPanel>
+      <PlPanel>
         <div className="grid gap-2 md:grid-cols-5 xl:grid-cols-10">
           {TOUR_STATUSES.map((item, idx) => (
             <div key={item} className="flex items-center gap-2">
@@ -77,9 +77,9 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
             </div>
           ))}
         </div>
-      </GlassPanel>
+      </PlPanel>
 
-      <GlassPanel>
+      <PlPanel>
         <h3 className="font-semibold">Trạng thái hiện tại: {status}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Vai trò hiện tại: <Badge variant={role === "MANAGER" ? "info" : "secondary"}>{role}</Badge>
@@ -87,6 +87,15 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
         <div className="mt-3 flex flex-wrap gap-2">
           <Link href={`/tours/${params.tourId}/estimate`} className="text-sm font-medium text-primary hover:underline">
             Mở form dự toán
+          </Link>
+          <Link href={`/services?search=${encodeURIComponent(params.tourId)}`} className="text-sm font-medium text-primary hover:underline">
+            Mở list dịch vụ
+          </Link>
+          <Link href={`/bookings?search=${encodeURIComponent(params.tourId)}`} className="text-sm font-medium text-primary hover:underline">
+            Mở list phiếu DV
+          </Link>
+          <Link href={`/settlements?search=${encodeURIComponent(params.tourId)}`} className="text-sm font-medium text-primary hover:underline">
+            Mở quyết toán
           </Link>
           {!requirement.valid ? (
             <div className="rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs text-amber-700">
@@ -101,29 +110,45 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
             <p className="text-sm text-muted-foreground">Không có transition hợp lệ cho vai trò hiện tại.</p>
           )}
         </div>
-      </GlassPanel>
+      </PlPanel>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <GlassPanel>
+        <PlPanel>
           <h3 className="font-semibold">Tabs theo trạng thái hiện tại</h3>
           <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
             <li>Lịch trình tour</li>
-            <li>Chiết tính tour</li>
-            <li>Danh sách đơn hàng</li>
-            <li>Danh sách khách hàng</li>
-            <li>Bảng dự toán</li>
+            <li>
+              <Link href={`/tours/${params.tourId}/estimate`} className="text-primary hover:underline">
+                Chiết tính tour
+              </Link>
+            </li>
+            <li>
+              <Link href={`/bookings?search=${encodeURIComponent(params.tourId)}`} className="text-primary hover:underline">
+                Danh sách đơn hàng
+              </Link>
+            </li>
+            <li>
+              <Link href={`/bookings?search=${encodeURIComponent(params.tourId)}`} className="text-primary hover:underline">
+                Danh sách khách hàng
+              </Link>
+            </li>
+            <li>
+              <Link href={`/tours/${params.tourId}/estimate`} className="text-primary hover:underline">
+                Bảng dự toán
+              </Link>
+            </li>
           </ul>
-        </GlassPanel>
-        <GlassPanel>
+        </PlPanel>
+        <PlPanel>
           <h3 className="font-semibold">Hồ sơ bàn giao HDV (9 files)</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Lịch trình, Chiết tính, Đơn hàng, Khách hàng, Dự toán, BB dụng cụ, HĐ HDV, Phiếu điều tour, QR đánh giá.
           </p>
-        </GlassPanel>
+        </PlPanel>
       </div>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Checklist HDV</h3>
           </div>
@@ -153,9 +178,9 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
               </TableRow>
             </TableBody>
           </Table>
-        </GlassTableContainer>
+        </PlTableShell>
 
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Dịch vụ phát sinh trong tour</h3>
           </div>
@@ -183,16 +208,16 @@ export default function TourDetailPage({ params }: { params: { tourId: string } 
               </TableRow>
             </TableBody>
           </Table>
-        </GlassTableContainer>
+        </PlTableShell>
       </section>
 
-      <GlassPanel>
+      <PlPanel>
         <h3 className="font-semibold">Audit timeline</h3>
         <p className="text-xs text-muted-foreground">Lịch sử thao tác trạng thái tour theo actor và thời điểm.</p>
         <div className="mt-3">
           <AuditTimeline items={auditItems} />
         </div>
-      </GlassPanel>
+      </PlPanel>
     </>
   );
 }

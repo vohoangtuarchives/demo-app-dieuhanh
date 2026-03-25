@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { GlassStat, GlassTableContainer } from "@/components/glass/glass";
+import { PlStat, PlTableShell } from "@/components/preline/layout-primitives";
 import { RoleGuard } from "@/components/providers/role-guard";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -133,13 +133,13 @@ export default function ManagerDashboardPage() {
       <section className="grid gap-3 md:grid-cols-3">
         {segmentSummary.map((item) => (
           <button key={item.segment} type="button" className={`rounded-xl text-left ${activeSegment === item.segment ? "ring-2 ring-primary/30" : ""}`} onClick={() => setActiveSegment(item.segment)}>
-            <GlassStat title={`${item.segment} (Lẻ + Đoàn)`} value={item.totalTours} hint={`LN: ${(item.totalProfit / 1000000000).toFixed(1)} tỷ`} />
+            <PlStat title={`${item.segment} (Lẻ + Đoàn)`} value={item.totalTours} hint={`LN: ${(item.totalProfit / 1000000000).toFixed(1)} tỷ`} />
           </button>
         ))}
       </section>
 
       <section className="grid gap-3 xl:grid-cols-2">
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Chart số tour theo phân khúc x loại khách</h3>
           </div>
@@ -157,9 +157,9 @@ export default function ManagerDashboardPage() {
               );
             })}
           </div>
-        </GlassTableContainer>
+        </PlTableShell>
 
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Chart lợi nhuận theo phân khúc x loại khách</h3>
           </div>
@@ -177,10 +177,10 @@ export default function ManagerDashboardPage() {
               );
             })}
           </div>
-        </GlassTableContainer>
+        </PlTableShell>
       </section>
 
-      <GlassTableContainer>
+      <PlTableShell>
         <div className="mb-3 flex items-center justify-between p-3 pb-0">
           <h3 className="font-semibold">Drill-down: {activeSegment} theo loại khách</h3>
           <Badge variant="info">{filters.branch}</Badge>
@@ -211,9 +211,9 @@ export default function ManagerDashboardPage() {
             ))}
           </TableBody>
         </Table>
-      </GlassTableContainer>
+      </PlTableShell>
 
-      <GlassTableContainer>
+      <PlTableShell>
         <div className="mb-3 flex items-center justify-between p-3 pb-0">
           <h3 className="font-semibold">Hiệu suất theo NVĐH</h3>
           <Badge variant="info">{filters.branch}</Badge>
@@ -248,10 +248,10 @@ export default function ManagerDashboardPage() {
             ))}
           </TableBody>
         </Table>
-      </GlassTableContainer>
+      </PlTableShell>
 
       <section className="grid gap-3 xl:grid-cols-2">
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Theo dõi thanh toán dịch vụ theo NVĐH</h3>
           </div>
@@ -282,9 +282,9 @@ export default function ManagerDashboardPage() {
               ))}
             </TableBody>
           </Table>
-        </GlassTableContainer>
+        </PlTableShell>
 
-        <GlassTableContainer>
+        <PlTableShell>
           <div className="p-3 pb-0">
             <h3 className="font-semibold">Theo dõi phiếu đặt DV theo NVĐH</h3>
           </div>
@@ -313,10 +313,10 @@ export default function ManagerDashboardPage() {
               ))}
             </TableBody>
           </Table>
-        </GlassTableContainer>
+        </PlTableShell>
       </section>
 
-      <GlassTableContainer>
+      <PlTableShell>
         <div className="p-3 pb-0">
           <h3 className="font-semibold">Approval queue (ngoại lệ tài chính/quyết toán vượt ngưỡng)</h3>
         </div>
@@ -351,16 +351,16 @@ export default function ManagerDashboardPage() {
             ))}
           </TableBody>
         </Table>
-      </GlassTableContainer>
+      </PlTableShell>
 
-      <GlassTableContainer>
+      <PlTableShell>
         <div className="p-3 pb-0">
           <h3 className="font-semibold">Alert center vận hành</h3>
         </div>
         <div className="p-3">
           <AlertCenter items={alerts} />
         </div>
-      </GlassTableContainer>
+      </PlTableShell>
     </RoleGuard>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { GlassCard, GlassPanel, GlassStat, GlassTableContainer } from "@/components/glass/glass";
+import Link from "next/link";
+import { PlCard, PlPanel, PlStat, PlTableShell } from "@/components/preline/layout-primitives";
 import { operatorCards, TOUR_STATUSES } from "@/lib/app-data";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Input } from "@/components/ui/input";
@@ -92,6 +93,9 @@ export default function OperatorDashboardPage() {
   const visiblePaymentRows = useMemo(() => servicePaymentRows[activePayment] ?? [], [activePayment]);
   const visibleBookingRows = useMemo(() => bookingRowsByStatus[activeBooking] ?? [], [activeBooking]);
 
+  // Map nhóm phiếu trong dashboard operator -> giá trị filter mà `bookings/page.tsx` đang hỗ trợ
+  const bookingStatusParam = activeBooking === "Phiếu chưa xác nhận" ? "SENT" : "CONFIRMED";
+
   useEffect(() => {
     let mounted = true;
     getOperatorDashboard()
@@ -134,7 +138,7 @@ export default function OperatorDashboardPage() {
     <>
       {loading ? <LoadingBlock /> : null}
       {error ? <ErrorBlock message={error} /> : null}
-      <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+      <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Dashboard NV Điều hành</h2>
@@ -157,22 +161,22 @@ export default function OperatorDashboardPage() {
             <option>Tất cả NVĐH</option><option>Nguyễn Văn A</option><option>Trần Thị B</option><option>Lê Quốc C</option>
           </NativeSelect>
         </div>
-      </GlassPanel>
+      </PlPanel>
 
       <section className="grid gap-3 md:gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {operatorCards.map((item) => (
-          <GlassStat key={item.title} title={item.title} value={item.value} />
+          <PlStat key={item.title} title={item.title} value={item.value} />
         ))}
       </section>
 
-      <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+      <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
         <h3 className="font-semibold">Biểu đồ tổng quan (demo)</h3>
         <p className="text-xs text-muted-foreground">So sánh số tour và lợi nhuận theo khách lẻ/đoàn</p>
         <div className="mt-4 grid gap-3 md:gap-4 lg:grid-cols-2">
           {chartData.map((item) => {
             const percent = Math.round((item.value / item.total) * 100);
             return (
-              <GlassCard key={item.label} className="p-3.5 shadow-none">
+              <PlCard key={item.label} className="p-3.5 shadow-none">
                 <div className="flex items-center justify-between text-sm">
                   <span>{item.label}</span>
                   <span className="font-semibold">{item.value}</span>
@@ -180,17 +184,17 @@ export default function OperatorDashboardPage() {
                 <div className="mt-2 h-2 rounded-full bg-muted">
                   <div className="h-2 rounded-full bg-primary" style={{ width: `${percent}%` }} />
                 </div>
-              </GlassCard>
+              </PlCard>
             );
           })}
         </div>
-      </GlassPanel>
+      </PlPanel>
 
-      <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+      <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
         <h3 className="font-semibold">10 trạng thái tour</h3>
         <div className="mt-4 grid gap-3 md:gap-4 sm:grid-cols-2 xl:grid-cols-5">
           {TOUR_STATUSES.map((status, index) => (
-            <GlassCard
+            <PlCard
               key={status}
               className={`interactive-card min-h-[122px] rounded-xl border bg-white/85 p-3.5 shadow-none transition-all ${
                 activeStatus === status
@@ -225,13 +229,13 @@ export default function OperatorDashboardPage() {
               >
                 {activeStatus === status ? "Đang hiển thị" : "Mở list đã lọc"}
               </Button>
-            </GlassCard>
+            </PlCard>
           ))}
         </div>
-      </GlassPanel>
+      </PlPanel>
 
       <section className="grid gap-3 md:gap-4 xl:grid-cols-2">
-        <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+        <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
           <h3 className="font-semibold">Thanh toán dịch vụ</h3>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {paymentCards.map((item, idx) => (
@@ -240,17 +244,17 @@ export default function OperatorDashboardPage() {
                 onClick={() => setActivePayment(item.title as "Chưa thanh toán" | "Đã cọc" | "Đã thanh toán đủ")}
                 className={`interactive-card rounded-lg ${activePayment === item.title ? "ring-2 ring-primary/30" : ""}`}
               >
-                <GlassCard className="p-3 shadow-none">
+                <PlCard className="p-3 shadow-none">
                   <p className="text-xs text-muted-foreground">{item.title}</p>
                   <p className={`mt-2 text-4xl leading-none font-semibold ${valueToneClass(item.tone as "warning" | "success" | "default")}`}>
                     {payload?.paymentStatuses[idx]?.count ?? item.value}
                   </p>
-                </GlassCard>
+                </PlCard>
               </div>
             ))}
           </div>
-        </GlassPanel>
-        <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+        </PlPanel>
+        <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
           <h3 className="font-semibold">Phiếu đặt dịch vụ</h3>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {bookingCards.map((item, idx) => (
@@ -259,23 +263,23 @@ export default function OperatorDashboardPage() {
                 onClick={() => setActiveBooking(item.title as "Phiếu chưa xác nhận" | "Phiếu đã xác nhận")}
                 className={`interactive-card rounded-lg ${activeBooking === item.title ? "ring-2 ring-primary/35" : ""}`}
               >
-                <GlassCard className="p-3 shadow-none">
+                <PlCard className="p-3 shadow-none">
                   <p className="text-xs text-muted-foreground">{item.title}</p>
                   <p className="mt-2 text-4xl leading-none font-semibold text-foreground">{payload?.bookingStatuses[idx]?.count ?? item.value}</p>
-                </GlassCard>
+                </PlCard>
               </div>
             ))}
           </div>
-        </GlassPanel>
+        </PlPanel>
       </section>
 
       <section className="grid gap-3 md:gap-4 xl:grid-cols-3">
-        <GlassPanel className="xl:col-span-2 p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+        <PlPanel className="xl:col-span-2 p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="font-semibold">Drill-down tour theo trạng thái: {activeStatus}</h3>
             <Badge variant="info">{visibleStatusRows.length} tour</Badge>
           </div>
-          <GlassTableContainer>
+          <PlTableShell>
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="table-head-sticky">
@@ -296,18 +300,21 @@ export default function OperatorDashboardPage() {
                     <TableCell>{row.branch}</TableCell>
                     <TableCell>{row.startDate}</TableCell>
                     <TableCell>
-                      <Button size="sm" variant="default">
+                      <Link
+                        href={`/tours/${row.code}`}
+                        className="inline-flex items-center justify-center rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+                      >
                         Mở step hiện tại
-                      </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </GlassTableContainer>
-        </GlassPanel>
+          </PlTableShell>
+        </PlPanel>
 
-        <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+        <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold">Thanh toán DV:</h3>
             <Badge variant={activePayment === "Chưa thanh toán" ? "danger" : activePayment === "Đã cọc" ? "warning" : "success"}>
@@ -316,7 +323,7 @@ export default function OperatorDashboardPage() {
           </div>
           <div className="mt-3 space-y-3">
             {visiblePaymentRows.map((row) => (
-              <GlassCard key={row.voucherCode} className="p-3 shadow-none">
+              <PlCard key={row.voucherCode} className="p-3 shadow-none">
                 <p className="text-xs text-muted-foreground">{row.voucherCode}</p>
                 <p className="text-sm font-semibold">{row.tourCode}</p>
                 <p className="text-xs">{row.serviceType}</p>
@@ -324,18 +331,26 @@ export default function OperatorDashboardPage() {
                 <div className="mt-2">
                   <Badge variant={row.overdue === "Quá hạn" ? "danger" : row.overdue === "Sắp đến hạn" ? "warning" : "secondary"}>{row.overdue}</Badge>
                 </div>
-              </GlassCard>
+                <div className="mt-3">
+                  <Link
+                    href={`/services?paymentStatus=${encodeURIComponent(activePayment)}&search=${encodeURIComponent(row.voucherCode)}`}
+                    className="text-sm font-medium text-primary hover:underline"
+                  >
+                    Mở danh sách dịch vụ
+                  </Link>
+                </div>
+              </PlCard>
             ))}
           </div>
-        </GlassPanel>
+        </PlPanel>
       </section>
 
-      <GlassPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
+      <PlPanel className="p-4 md:p-5 ring-1 ring-foreground/8 shadow-none">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-semibold">Drill-down phiếu DV: {activeBooking}</h3>
           <Badge variant="info">{visibleBookingRows.length} phiếu</Badge>
         </div>
-        <GlassTableContainer>
+        <PlTableShell>
           <Table className="min-w-full">
             <TableHeader>
               <TableRow className="table-head-sticky">
@@ -354,16 +369,19 @@ export default function OperatorDashboardPage() {
                   <TableCell>{row.supplier}</TableCell>
                   <TableCell>{row.useDate}</TableCell>
                   <TableCell>
-                    <Button size="sm" variant="default">
-                      Cập nhật trạng thái
-                    </Button>
+                    <Link
+                      href={`/bookings?status=${bookingStatusParam}&search=${encodeURIComponent(row.bookingCode)}`}
+                      className="inline-flex items-center justify-center rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      Mở danh sách phiếu
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </GlassTableContainer>
-      </GlassPanel>
+        </PlTableShell>
+      </PlPanel>
     </>
   );
 }

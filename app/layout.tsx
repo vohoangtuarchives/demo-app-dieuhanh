@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { PrelineLoader } from "@/components/preline/preline-loader";
 
 export const metadata: Metadata = {
   title: "App Điều hành Tour",
@@ -17,11 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("h-full", "antialiased", "font-sans")}>
       <body className="min-h-full flex flex-col">
-       <TooltipProvider>
         {children}
         <Toaster />
-       </TooltipProvider>
-          </body>
-        </html>
+        <PrelineLoader />
+      </body>
+    </html>
   );
 }

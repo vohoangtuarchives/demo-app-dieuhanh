@@ -1,11 +1,17 @@
+import { PlPanel } from "@/components/preline/layout-primitives";
+
 export function LoadingBlock() {
-  return <div className="glass-panel p-4 text-sm text-muted-foreground">Đang tải dữ liệu...</div>;
+  return <PlPanel className="text-sm text-muted-foreground">Đang tải dữ liệu...</PlPanel>;
 }
 
 export function ErrorBlock({ message }: { message: string }) {
-  return <div className="glass-panel p-4 text-sm status-danger">Lỗi: {message}</div>;
+  return (
+    <PlPanel className="text-sm status-danger">
+      Lỗi: {message}
+    </PlPanel>
+  );
 }
 
 export function EmptyBlock({ message }: { message: string }) {
-  return <div className="glass-panel p-4 text-sm text-muted-foreground">{message}</div>;
+  return <p className="p-6 text-sm text-muted-foreground">{message}</p>;
 }
