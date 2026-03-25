@@ -301,8 +301,11 @@ export default function ManagerDashboardPage() {
                     <TableCell><Badge variant="secondary">{row.tourCount}</Badge></TableCell>
                     <TableCell className="tabular-nums">{row.profit.toLocaleString("vi-VN")} đ</TableCell>
                     <TableCell className="text-right">
-                      <Link href={buildToursLink(filters.branch, row.segment, row.customerType)} className="text-sm font-medium text-primary hover:underline">
-                        Mở list đã lọc
+                      <Link href={buildToursLink(filters.branch, row.segment, row.customerType)}>
+                        <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                          <ExternalLink className="size-3" />
+                          Mở list đã lọc
+                        </Button>
                       </Link>
                     </TableCell>
                   </TableRow>
@@ -382,8 +385,12 @@ export default function ManagerDashboardPage() {
                     <TableCell><Badge variant="success">{row.full}</Badge></TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={buildServicesLink("Chưa thanh toán")} className="text-xs font-medium text-primary hover:underline">Unpaid</Link>
-                        <Link href={buildServicesLink("Đã cọc")} className="text-xs font-medium text-primary hover:underline">Deposited</Link>
+                        <Link href={buildServicesLink("Chưa thanh toán")}>
+                          <Button variant="outline" size="sm" className="text-xs">Unpaid</Button>
+                        </Link>
+                        <Link href={buildServicesLink("Đã cọc")}>
+                          <Button variant="outline" size="sm" className="text-xs">Deposited</Button>
+                        </Link>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -415,8 +422,12 @@ export default function ManagerDashboardPage() {
                     <TableCell><Badge variant="warning">{row.pending}</Badge></TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={buildBookingsLink("CONFIRMED")} className="text-xs font-medium text-primary hover:underline">Confirmed</Link>
-                        <Link href={buildBookingsLink("SENT")} className="text-xs font-medium text-primary hover:underline">Pending</Link>
+                        <Link href={buildBookingsLink("CONFIRMED")}>
+                          <Button variant="outline" size="sm" className="text-xs">Confirmed</Button>
+                        </Link>
+                        <Link href={buildBookingsLink("SENT")}>
+                          <Button variant="outline" size="sm" className="text-xs">Pending</Button>
+                        </Link>
                       </div>
                     </TableCell>
                   </TableRow>

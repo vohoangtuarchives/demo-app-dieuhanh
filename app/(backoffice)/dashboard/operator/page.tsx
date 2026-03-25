@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   BarChart3,
   CreditCard,
+  ExternalLink,
   Eye,
   FileCheck,
   Layers,
@@ -424,11 +425,11 @@ export default function OperatorDashboardPage() {
                     <Badge variant={row.overdue === "Quá hạn" ? "danger" : row.overdue === "Sắp đến hạn" ? "warning" : "secondary"}>{row.overdue}</Badge>
                   </div>
                   <div className="mt-2">
-                    <Link
-                      href={`/services?paymentStatus=${encodeURIComponent(activePayment)}&search=${encodeURIComponent(row.voucherCode)}`}
-                      className="text-sm font-medium text-primary hover:underline"
-                    >
-                      Mở danh sách dịch vụ
+                    <Link href={`/services?paymentStatus=${encodeURIComponent(activePayment)}&search=${encodeURIComponent(row.voucherCode)}`}>
+                      <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                        <ExternalLink className="size-3" />
+                        Mở danh sách dịch vụ
+                      </Button>
                     </Link>
                   </div>
                 </div>
