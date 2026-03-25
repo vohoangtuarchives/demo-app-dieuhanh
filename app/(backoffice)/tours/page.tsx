@@ -153,8 +153,8 @@ export default function ToursPage() {
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {([
           { label: "Tổng tour", value: totals.totalTours, sub: `${totals.pax} pax`, icon: Map, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-950/30", border: "border-blue-200 dark:border-blue-800" },
-          { label: "Doanh thu", value: totals.revenue.toLocaleString("vi-VN"), icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-200 dark:border-emerald-800" },
-          { label: "Chi phí", value: totals.cost.toLocaleString("vi-VN"), icon: Users, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-200 dark:border-amber-800" },
+          { label: "Doanh thu", value: totals.revenue.toLocaleString("vi-VN"), sub: "", icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950/30", border: "border-emerald-200 dark:border-emerald-800" },
+          { label: "Chi phí", value: totals.cost.toLocaleString("vi-VN"), sub: "", icon: Users, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950/30", border: "border-amber-200 dark:border-amber-800" },
           { label: "Lợi nhuận", value: totals.profit.toLocaleString("vi-VN"), sub: `${totals.margin}% margin`, icon: TrendingUp, color: "text-primary", bg: "bg-primary/5", border: "border-primary/20" },
         ] as const).map((stat) => (
           <div key={stat.label} className={cn("rounded-xl border p-4", stat.border, stat.bg)}>
