@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FilterX } from "lucide-react";
 import { FilterBar } from "@/components/backoffice/filter-bar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,12 +22,13 @@ export function UnifiedFilterBar({
       title={title}
       actions={
         <div className="flex items-center gap-2">
-          {hasActiveFilters ? <Badge variant="info">Đang lọc</Badge> : null}
-          {onReset ? (
-            <Button variant="secondary" size="sm" onClick={onReset}>
+          {hasActiveFilters && <Badge variant="info" className="gap-1 text-[11px]">Đang lọc</Badge>}
+          {onReset && (
+            <Button variant="secondary" size="sm" className="gap-1.5 text-xs" onClick={onReset}>
+              <FilterX className="size-3.5" />
               Clear filters
             </Button>
-          ) : null}
+          )}
           {rightActions}
         </div>
       }

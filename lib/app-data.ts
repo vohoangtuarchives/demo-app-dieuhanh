@@ -3,14 +3,14 @@ export type Role = "OPS" | "MANAGER";
 export const BRANCHES = ["HCM", "Cần Thơ", "Hà Nội", "Cà Mau", "Quảng Bình"];
 
 export const NAV_ITEMS = [
-  { label: "Dashboard NVĐH", href: "/dashboard/operator" },
-  { label: "Dashboard Giám đốc", href: "/dashboard/manager" },
-  { label: "List Tour", href: "/tours" },
-  { label: "List Dịch vụ", href: "/services" },
-  { label: "List Phiếu DV", href: "/bookings" },
-  { label: "Quyết toán", href: "/settlements" },
-  { label: "Cài đặt", href: "/settings" },
-];
+  { label: "Dashboard NVĐH", href: "/dashboard/operator", icon: "LayoutDashboard" },
+  { label: "Dashboard Giám đốc", href: "/dashboard/manager", icon: "TrendingUp" },
+  { label: "List Tour", href: "/tours", icon: "Map" },
+  { label: "List Dịch vụ", href: "/services", icon: "BriefcaseBusiness" },
+  { label: "List Phiếu DV", href: "/bookings", icon: "FileText" },
+  { label: "Quyết toán", href: "/settlements", icon: "Wallet" },
+  { label: "Cài đặt", href: "/settings", icon: "Settings2" },
+] as const;
 
 export const TOUR_STATUSES = [
   "Chờ nhận",

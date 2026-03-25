@@ -147,6 +147,65 @@
   --status-info: oklch(0.73 0.12 244);
 }
 
+/* Classic dashboard theme (xanh dương + xám trung tính) */
+.classic-dashboard {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: #2563eb; /* blue-600 */
+  --primary-foreground: #ffffff;
+  --secondary: #e2e8f0; /* slate-200 */
+  --secondary-foreground: #0f172a;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+
+  --muted: #cbd5e1; /* slate-300 */
+  --muted-foreground: #475569; /* slate-600 */
+  --destructive: #dc2626; /* red-600 */
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0;
+  --ring: #93c5fd; /* blue-300 */
+
+  --status-success: #16a34a; /* green-600 */
+  --status-warning: #d97706; /* amber-600 */
+  --status-danger: #dc2626; /* red-600 */
+  --status-info: #0284c7; /* sky-600 */
+
+  /* giữ nguyên chart palette để biểu đồ vẫn đồng bộ */
+}
+
+.dark .classic-dashboard {
+  --background: #0b1220; /* near-slate-950 */
+  --foreground: #e5e7eb; /* gray-200 */
+  --card: #0f172a; /* slate-900 */
+  --card-foreground: #e5e7eb;
+  --popover: #0f172a;
+  --popover-foreground: #e5e7eb;
+
+  --primary: #3b82f6; /* blue-500 */
+  --primary-foreground: #0b1220;
+  --secondary: #111c33;
+  --secondary-foreground: #e5e7eb;
+  --accent: #3b82f6;
+  --accent-foreground: #0b1220;
+
+  --muted: #334155; /* slate-700 */
+  --muted-foreground: #94a3b8; /* slate-400 */
+  --destructive: #ef4444;
+  --border: rgba(148, 163, 184, 0.25);
+  --input: rgba(148, 163, 184, 0.25);
+  --ring: rgba(59, 130, 246, 0.45);
+
+  --status-success: #22c55e;
+  --status-warning: #f59e0b;
+  --status-danger: #ef4444;
+  --status-info: #38bdf8;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
